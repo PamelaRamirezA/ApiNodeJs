@@ -13,12 +13,13 @@ export const findbyId = (id: string): BotEntry | undefined=> {
 }
 
 export const addBot =  (idgenerated : string,newBotEntry: newBotEntry): BotEntry => {
+
     const newBot = {
         //id: String(Math.max(...collectionDB.map(d=> Number(d.id)))+1),
         id: idgenerated,
         ...newBotEntry
     }
-    bot.push(newBot)
+    //bot.push(newBot)
     return newBot
 }
 

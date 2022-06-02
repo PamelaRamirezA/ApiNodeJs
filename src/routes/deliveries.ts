@@ -1,11 +1,13 @@
 import express from 'express'
 import * as deliveryServices from '../services/deliveryServices'
+import * as botServices from '../services/botsServices'
 import { DeliveryEntry } from '../types'
 import toNewDeliveryEntry from '../utils'
+import toNewBotEntry1 from '../utils_bots'
+import toNewBotEntry from '../utils_bots'
 
 const admin = require('firebase-admin')
 const serviceAccount = require("../../serviceAccount.json")
-
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -16,12 +18,18 @@ const db = admin.database()
 const app = express();
 const router = express.Router()
 const ref = db.ref('deliveries')
+const refbots = db.ref('bots')
 
 
 router.get('/', (_req,res) => {
     ref.once('value', (snapshot) => {
         const data = snapshot.val();
         res.render('index', {deliveries: data})
+    })
+    refbots.once('value', (snapshot) => {
+        const data = snapshot.val();
+        console.log (data)
+        //res.render('index', {deliveries: data})
     })
     /*
     ref.on('value', (snapshot : any) => {
@@ -35,34 +43,35 @@ router.get('/', (_req,res) => {
     console.log('result '+result)
     */
 })
-//comment
-
-//comment 2
 router.get('/:id', (req,res) => {
+    const data = undefined
    //const delivery = deliveryServices.findbyId(req.params.id)
+    res.render('index', {deliveries: data})
     ref.orderByChild("id").equalTo(req.params.id).on('child_added', (snapshot) => {
         console.log(snapshot.key);
-        const data = snapshot;
-        res.render('index', {deliveries: data})
+        res.render('index', {deliveries: snapshot.val()})
     })
 })
 
 router.post('/', (req,res) => {
     try{
         const newDeliveryEntry = toNewDeliveryEntry(req.body)
-        /*ref.on('value', (snapshot : any) => {
-            //console.log(snapshot.val());
-            console.log('elemento leido '+ snapshot);
-        }, (errorObject: any) => {
-            console.log('The read failed: ' + errorObject.name);
-        }); 
-        
-        const idgen = ref.orderByChild('id').limitToFirst(1).Number()
-        console.log ('idgen ' + idgen)
-        */
         const addedDeliveryEntry = deliveryServices.addDelivery('1',newDeliveryEntry)
         db.ref('deliveries').push(addedDeliveryEntry)
         res.json(newDeliveryEntry)
+    }catch(e){
+        res.status(400)//.send(e.message)
+    }
+    
+})
+router.post('/new_bot', (req,res) => {
+    try{
+        console.log(req.body)
+        const newBotEntry = toNewBotEntry1(req.body)
+        console.log("hola "+newBotEntry)
+        const addedBotEntry = botServices.addBot('1',newBotEntry)
+        db.ref('bots').push(addedBotEntry)
+        res.json(newBotEntry)
     }catch(e){
         res.status(400)//.send(e.message)
     }

@@ -4,3 +4,9 @@ export enum State {
 	InTransit = 'in_transit', 
 	Delivered = 'delivered'
 }
+
+export enum Status {
+	Available = 'available',
+	Busy = 'busy', 
+	Reserved = 'reserved'
+}

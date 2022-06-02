@@ -1,6 +1,6 @@
 import express from 'express'
-//import * as BotServices from '../services/botsServices'
-import toNewBotEntry from '../utils'
+import * as BotServices from '../services/botsServices'
+import toNewBotEntry1 from '../utils_bots'
 
 const admin = require('firebase-admin')
 const serviceAccount = require("../../serviceAccount.json")
@@ -15,7 +15,12 @@ const router = express.Router()
 const ref = db.ref('bots')
 
 router.get('/:id', (req,res) => {  
-    ref.on('value', (snapshot : any) => {
+    ref.once('value', (snapshot) => {
+        const data = snapshot.val();
+        //res.render('index', {bots: data})
+        console.log(snapshot.val());
+    })
+    /*ref.on('value', (snapshot : any) => {
         console.log(snapshot.val());
       }, (errorObject: any) => {
         console.log('The read failed: ' + errorObject.name);
@@ -26,6 +31,7 @@ router.get('/:id', (req,res) => {
     return bot2 
         ? res.send(bot2)
         : res.sendStatus(400) 
+        */
 })
 
 router.get('/:id', (req,res) => {
@@ -42,9 +48,9 @@ router.get('/:id', (req,res) => {
         : res.sendStatus(400) 
 })
 
-router.post('/', (_req,res) => {
+router.post('/', (req,res) => {
     try{
-        const newBotEntry = toNewBotEntry
+        const newBotEntry = toNewBotEntry1(req.body)
         /*ref.on('value', (snapshot : any) => {
             //console.log(snapshot.val());
             console.log('elemento leido '+ snapshot);
@@ -55,8 +61,8 @@ router.post('/', (_req,res) => {
         const idgen = ref.orderByChild('id').limitToFirst(1).Number()
         console.log ('idgen ' + idgen)
         */
-        //const addedBotEntry = BotServices.addBot('1',newBotEntry)
-        //db.ref('bots').push(addedBotEntry)
+        const addedBotEntry = BotServices.addBot('1',newBotEntry)
+        db.ref('bots').push(addedBotEntry)
         res.json(newBotEntry)
     }catch(e){
         res.status(400)//.send(e.message)

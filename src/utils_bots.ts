@@ -1,22 +1,9 @@
-import {newDeliveryEntry} from './types'
+import {newBotEntry} from './types'
 import {State} from './enums'
 
 const isString = (string : string): boolean => {
     return typeof string == 'string'
 } 
-/*
-const isDate = (date : string): boolean => {
-    return Boolean(Date.parse(date))
-}
-
-const parseDate = (dateFromRequest: any): string => {
-    if(!isString(dateFromRequest) || !isDate(dateFromRequest)){
-        throw new Error('Incorrect or missing date')
-        
-    }
-    return dateFromRequest
-}*/
-
 const isState = (param : any) : boolean => {
     return Object.values(State).includes(param)
 }
@@ -45,14 +32,15 @@ const parseZone =  (zoneFromRequest : any) : string =>{
 
     return zoneFromRequest
 }
-const toNewDeliveryEntry = (object: any): newDeliveryEntry => {
-    const newEntry : newDeliveryEntry={
-        state: parseState(object.state),
-        pickup : parseNumber(object.pickup),
-        dropoff : parseNumber(object.dropoff),
-        zone_id : parseZone(object.zone_id)
+const toNewBotEntry1 = (object : any) : newBotEntry => {
+    const newEntry2 : newBotEntry={
+        status : parseState(object.status),
+        location: {
+            lat: parseNumber(object.location.lat),
+            lon: parseNumber(object.location.lon)
+        },
+        zone_id: parseZone(object.zone_id),
     }
-    return newEntry
+    return newEntry2
 }
-
-export default toNewDeliveryEntry;
+export default toNewBotEntry1;

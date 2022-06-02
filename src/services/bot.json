@@ -2,8 +2,10 @@
     { 
 	"id": "1",
 	"status": "busy",
-    "loc_lat": 1,
-    "loc_lon": 22,
-	"zone_id": "south25"
+    "location" :{
+        "lat": 15,
+        "lon": 28
+    },
+    "zone_id": "south25"
     }
 ]
