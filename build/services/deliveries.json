@@ -1,0 +1,18 @@
+[
+    {
+        "id": "1",
+        "creation_date": "2022-05-31",
+        "state": "delivered",
+        "pickup": 1,
+        "dropoff": 22,
+        "zone_id": "south25"
+    },
+    {
+        "id": "2",
+        "creation_date": "2022-06-01",
+        "state": "pending",
+        "pickup": 8,
+        "dropoff": 14,
+        "zone_id": "north12"
+    }
+]
