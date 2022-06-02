@@ -26,11 +26,6 @@ router.get('/', (_req,res) => {
         const data = snapshot.val();
         res.render('index', {deliveries: data})
     })
-    refbots.once('value', (snapshot) => {
-        const data = snapshot.val();
-        console.log (data)
-        //res.render('index', {deliveries: data})
-    })
     /*
     ref.on('value', (snapshot : any) => {
         console.log(snapshot.val());
@@ -53,11 +48,30 @@ router.get('/:id', (req,res) => {
     })
 })
 
+router.get('/bots', (_req,res) => {
+    console.log ('/bots')
+    refbots.once('value', (snapshot) => {
+        const data = snapshot.val();
+        //res.render('index', {deliveries: data})
+    })
+    /*
+    ref.on('value', (snapshot : any) => {
+        console.log(snapshot.val());
+      }, (errorObject: any) => {
+        console.log('The read failed: ' + errorObject.name);
+      }); 
+*/
+    /*const result = ref.get()
+    //res.render('index', {deliveries: result})
+    console.log('result '+result)
+    */
+})
+
 router.post('/', (req,res) => {
     try{
         const newDeliveryEntry = toNewDeliveryEntry(req.body)
         const addedDeliveryEntry = deliveryServices.addDelivery('1',newDeliveryEntry)
-        db.ref('deliveries').push(addedDeliveryEntry)
+        ref.push(addedDeliveryEntry)
         res.json(newDeliveryEntry)
     }catch(e){
         res.status(400)//.send(e.message)
@@ -68,7 +82,6 @@ router.post('/new_bot', (req,res) => {
     try{
         console.log(req.body)
         const newBotEntry = toNewBotEntry1(req.body)
-        console.log("hola "+newBotEntry)
         const addedBotEntry = botServices.addBot('1',newBotEntry)
         db.ref('bots').push(addedBotEntry)
         res.json(newBotEntry)
@@ -77,20 +90,6 @@ router.post('/new_bot', (req,res) => {
     }
     
 })
-/*
-router.post('/new-delivery', (req,res) => {
-    try{
-        const newDeliveryEntry = toNewDeliveryEntry(req.body)
-
-        const addedDeliveryEntry = deliveryServices.addDelivery(newDeliveryEntry)
-    
-        res.json(addedDeliveryEntry)
-    }catch(e){
-        res.status(400)//.send(e.message)
-    }
-    
-})
-*/
 export default router
 
 

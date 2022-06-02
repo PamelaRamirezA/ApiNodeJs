@@ -20,7 +20,7 @@ const addBot = (idgenerated, newBotEntry) => {
     const newBot = Object.assign({ 
         //id: String(Math.max(...collectionDB.map(d=> Number(d.id)))+1),
         id: idgenerated }, newBotEntry);
-    bot.push(newBot);
+    //bot.push(newBot)
     return newBot;
 };
 exports.addBot = addBot;

@@ -35,12 +35,13 @@ const parseZone =  (zoneFromRequest : any) : string =>{
 const toNewBotEntry1 = (object : any) : newBotEntry => {
     const newEntry2 : newBotEntry={
         status : parseState(object.status),
-        location: {
+        /*location: {
             lat: parseNumber(object.location.lat),
             lon: parseNumber(object.location.lon)
-        },
+        },*/
         zone_id: parseZone(object.zone_id),
     }
+    console.log('toNewBotEntry1')
     return newEntry2
 }
 export default toNewBotEntry1;

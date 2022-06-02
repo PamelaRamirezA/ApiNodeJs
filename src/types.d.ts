@@ -24,10 +24,10 @@ export type newDeliveryEntry = Omit <DeliveryEntry, 'id' | 'creation_date'>
 
 export interface BotEntry {
     id: string,
-	location: {
+	/*location: {
 		lat: number,
 		lon: number
-	},/*
+	},
 	loc_lat: number,
 	loc_lon: number,*/
 	status: string,

@@ -4,18 +4,6 @@ const enums_1 = require("./enums");
 const isString = (string) => {
     return typeof string == 'string';
 };
-/*
-const isDate = (date : string): boolean => {
-    return Boolean(Date.parse(date))
-}
-
-const parseDate = (dateFromRequest: any): string => {
-    if(!isString(dateFromRequest) || !isDate(dateFromRequest)){
-        throw new Error('Incorrect or missing date')
-        
-    }
-    return dateFromRequest
-}*/
 const isState = (param) => {
     return Object.values(enums_1.State).includes(param);
 };
@@ -40,13 +28,16 @@ const parseZone = (zoneFromRequest) => {
     }
     return zoneFromRequest;
 };
-const toNewDeliveryEntry = (object) => {
-    const newEntry = {
-        state: parseState(object.state),
-        pickup: parseNumber(object.pickup),
-        dropoff: parseNumber(object.dropoff),
-        zone_id: parseZone(object.zone_id)
+const toNewBotEntry1 = (object) => {
+    const newEntry2 = {
+        status: parseState(object.status),
+        /*location: {
+            lat: parseNumber(object.location.lat),
+            lon: parseNumber(object.location.lon)
+        },*/
+        zone_id: parseZone(object.zone_id),
     };
-    return newEntry;
+    console.log('toNewBotEntry1');
+    return newEntry2;
 };
-exports.default = toNewDeliveryEntry;
+exports.default = toNewBotEntry1;

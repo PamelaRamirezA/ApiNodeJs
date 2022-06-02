@@ -28,7 +28,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const deliveryServices = __importStar(require("../services/deliveryServices"));
+const botServices = __importStar(require("../services/botsServices"));
 const utils_1 = __importDefault(require("../utils"));
+const utils_bots_1 = __importDefault(require("../utils_bots"));
 const admin = require('firebase-admin');
 const serviceAccount = require("../../serviceAccount.json");
 admin.initializeApp({
@@ -39,8 +41,8 @@ const db = admin.database();
 const app = (0, express_1.default)();
 const router = express_1.default.Router();
 const ref = db.ref('deliveries');
+const refbots = db.ref('bots');
 router.get('/', (_req, res) => {
-    //res.send(deliveryServices.getEntriesWOSensitiveData())
     ref.once('value', (snapshot) => {
         const data = snapshot.val();
         res.render('index', { deliveries: data });
@@ -58,29 +60,35 @@ router.get('/', (_req, res) => {
     */
 });
 router.get('/:id', (req, res) => {
+    const data = undefined;
     //const delivery = deliveryServices.findbyId(req.params.id)
-    ref.orderByChild("id").equalTo('id').on('child_added', (snapshot) => {
+    res.render('index', { deliveries: data });
+    ref.orderByChild("id").equalTo(req.params.id).on('child_added', (snapshot) => {
         console.log(snapshot.key);
-        const data = snapshot.val();
-        res.render('index', { deliveries: data });
+        res.render('index', { deliveries: snapshot.val() });
     });
-    ref.once('value', (snapshot) => {
+});
+router.get('/bots', (_req, res) => {
+    console.log('/bots');
+    refbots.once('value', (snapshot) => {
         const data = snapshot.val();
+        //res.render('index', {deliveries: data})
     });
+    /*
+    ref.on('value', (snapshot : any) => {
+        console.log(snapshot.val());
+      }, (errorObject: any) => {
+        console.log('The read failed: ' + errorObject.name);
+      });
+*/
+    /*const result = ref.get()
+    //res.render('index', {deliveries: result})
+    console.log('result '+result)
+    */
 });
 router.post('/', (req, res) => {
     try {
         const newDeliveryEntry = (0, utils_1.default)(req.body);
-        /*ref.on('value', (snapshot : any) => {
-            //console.log(snapshot.val());
-            console.log('elemento leido '+ snapshot);
-        }, (errorObject: any) => {
-            console.log('The read failed: ' + errorObject.name);
-        });
-        
-        const idgen = ref.orderByChild('id').limitToFirst(1).Number()
-        console.log ('idgen ' + idgen)
-        */
         const addedDeliveryEntry = deliveryServices.addDelivery('1', newDeliveryEntry);
         db.ref('deliveries').push(addedDeliveryEntry);
         res.json(newDeliveryEntry);
@@ -89,18 +97,16 @@ router.post('/', (req, res) => {
         res.status(400); //.send(e.message)
     }
 });
-/*
-router.post('/new-delivery', (req,res) => {
-    try{
-        const newDeliveryEntry = toNewDeliveryEntry(req.body)
-
-        const addedDeliveryEntry = deliveryServices.addDelivery(newDeliveryEntry)
-    
-        res.json(addedDeliveryEntry)
-    }catch(e){
-        res.status(400)//.send(e.message)
+router.post('/new_bot', (req, res) => {
+    try {
+        console.log(req.body);
+        const newBotEntry = (0, utils_bots_1.default)(req.body);
+        const addedBotEntry = botServices.addBot('1', newBotEntry);
+        db.ref('bots').push(addedBotEntry);
+        res.json(newBotEntry);
     }
-    
-})
-*/
+    catch (e) {
+        res.status(400); //.send(e.message)
+    }
+});
 exports.default = router;
